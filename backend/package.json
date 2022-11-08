@@ -1,0 +1,25 @@
+{
+  "name": "warecraft",
+  "version": "1.0.0",
+  "description": "- A **self-pracatice** repository for a **CRUD App** which represents a **high-level implementation of an inventory management system** built with [**NodeJS**](https://nodejs.org/en/), [**Express**](https://expressjs.com/) and [**MongoDB**](https://www.mongodb.com/) stack.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tarikceylan/WARECraft.git"
+  },
+  "author": "tarikceylan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tarikceylan/WARECraft/issues"
+  },
+  "homepage": "https://github.com/tarikceylan/WARECraft#readme",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {}
+}
