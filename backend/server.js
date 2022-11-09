@@ -12,6 +12,10 @@ const PORT = process.env.PORT || 3500;
 
 connectDB();
 
+// Middlewares
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 app.use('/users', userRoutes);
 app.use('/products', productRoutes);
 
