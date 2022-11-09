@@ -19,7 +19,16 @@ const getAllUsers = async (req, res) => {
 // @route GET /users/:id
 // @access PRIVATE
 
-const getUser = async (req, res) => {};
+const getUser = async (req, res) => {
+  const id = req.query.id;
+  User.findById(id).exec((err, user) => {
+    if (err || !user) {
+      return res.status(400).json({ message: `Invalid ID` });
+    } else {
+      return res.status(200).json(user);
+    }
+  });
+};
 
 // @desc CREATE New User
 // @route POST /users
