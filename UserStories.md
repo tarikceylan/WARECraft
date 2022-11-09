@@ -10,3 +10,4 @@
   - **Manager** - warehouse manager with administrative permissions in the system
 - [ ] Only users with **Manager** role are allowed to **create/modify/delete users**
 - [ ] **All requests** made to the system must be **logged automatically with a timestamp and a unique ID**
+- [ ] There should be **seperate endpoints** for consuming and filling products
