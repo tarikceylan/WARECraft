@@ -20,7 +20,7 @@ const getAllUsers = async (req, res) => {
 // @access PRIVATE
 
 const getUser = async (req, res) => {
-  const id = req.query.id;
+  const id = req.params.id;
   User.findById(id).exec((err, user) => {
     if (err || !user) {
       return res.status(400).json({ message: `Invalid ID` });
@@ -41,7 +41,7 @@ const createUser = async (req, res) => {
   const foundUser = await User.find({ username }).lean();
 
   if (foundUser?.length) {
-    return res.status(409).json({ message: 'User exists' });
+    return res.status(409).json({ message: `Username already in use.` });
   }
 
   // Check given fields
@@ -72,12 +72,47 @@ const createUser = async (req, res) => {
 // @route PATCH /users/:id
 // @access PRIVATE
 
-const updateUser = async (req, res) => {};
+const updateUser = async (req, res) => {
+  const id = req.params.id;
+  const { ...userData } = req.body;
+
+  // Hash new User Password if Password is being updated
+  if (userData.password?.length) {
+    userData.password = await bcrypt.hash(
+      userData.password,
+      parseInt(process.env.SALT)
+    );
+  }
+
+  // Check for duplicate username
+  const username = userData.username;
+  const duplicateUser = await User.find({ username }).lean();
+  if (duplicateUser?.length) {
+    return res.status(409).json({ message: `Username already in use` });
+  }
+
+  User.findByIdAndUpdate({ _id: id }, { ...userData }).exec((err, user) => {
+    if (err || !user) {
+      return res.status(400).json({ message: `Invalid ID` });
+    } else {
+      return res.status(200).json({ message: `User with ${id} ID, updated.` });
+    }
+  });
+};
 
 // @desc DELETE Specific User
 // @route DELETE /users/:id
 // @access PRIVATE
 
-const deleteUser = async (req, res) => {};
+const deleteUser = async (req, res) => {
+  const id = req.params.id;
+  User.findByIdAndDelete(id).exec((err, user) => {
+    if (err || !user) {
+      return res.status(400).json({ message: `Invalid ID` });
+    } else {
+      return res.status(200).json({ message: `User with ${id} ID, deleted.` });
+    }
+  });
+};
 
 module.exports = { getAllUsers, getUser, createUser, updateUser, deleteUser };
