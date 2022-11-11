@@ -115,13 +115,53 @@ const deleteProduct = async (req, res) => {
 // @route PATCH /products/:id/consume
 // @access PRIVATE
 
-const consumeProduct = async (req, res) => {};
+const consumeProduct = async (req, res) => {
+  const id = req.params.id;
+  const { consumeAmount } = req.body;
+  const foundProduct = await Product.findById(id).catch((err) => {
+    if (err) {
+      res.status(400).json({ message: `Invalid Product ID` });
+    }
+  });
+  const prodQty = foundProduct.quantity;
+  const resultQty = parseInt(prodQty) - parseInt(consumeAmount);
+  if (consumeAmount > foundProduct.quantity) {
+    res
+      .status(400)
+      .json({ message: `Not enough ${foundProduct.productCode} is in stock` });
+  } else {
+    foundProduct.quantity = resultQty;
+    await foundProduct.save();
+    return res.status(200).json({
+      message: `${parseInt(consumeAmount)} ${
+        foundProduct.productCode
+      } is consumed. Remaining Amount: ${foundProduct.quantity}`,
+    });
+  }
+};
 
 // @desc Increment Specific Product
 // @route PATCH /products/:id/fill
 // @access PRIVATE
 
-const fillProduct = async (req, res) => {};
+const fillProduct = async (req, res) => {
+  const id = req.params.id;
+  const { fillAmount } = req.body;
+  const foundProduct = await Product.findById(id).catch((err) => {
+    if (err) {
+      res.status(400).json({ message: `Invalid Product ID` });
+    }
+  });
+  const prodQty = foundProduct.quantity;
+  const resultQty = parseInt(prodQty) + parseInt(fillAmount);
+  foundProduct.quantity = resultQty;
+  await foundProduct.save();
+  return res.status(200).json({
+    message: `${parseInt(fillAmount)} ${
+      foundProduct.productCode
+    } is filled. Current Amount: ${foundProduct.quantity}`,
+  });
+};
 
 module.exports = {
   getAllProducts,
