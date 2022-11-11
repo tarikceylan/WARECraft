@@ -1,4 +1,5 @@
 const Product = require('../models/Product');
+const User = require('../models/User');
 
 // @desc GET All products
 // @route GET /products
@@ -69,13 +70,46 @@ const createProduct = async (req, res) => {
 // @route PATCH /products/:id
 // @access PRIVATE
 
-const updateProduct = async (req, res) => {};
+const updateProduct = async (req, res) => {
+  const id = req.params.id;
+  const { ...productData } = req.body;
+
+  // Check for duplicate productCode
+  const productCode = productData.productCode;
+  const duplicateProduct = await Product.find({ productCode }).lean();
+  if (duplicateProduct?.length) {
+    return res.status(409).json({ message: `Product code already exists` });
+  }
+
+  Product.findByIdAndUpdate({ _id: id }, { ...productData }).exec(
+    (err, product) => {
+      if (err || !product) {
+        return res.status(400).json({ message: `${err}Invalid Product ID` });
+      } else {
+        return res
+          .status(200)
+          .json({ message: `Product ${product.productCode} is updated` });
+      }
+    }
+  );
+};
 
 // @desc DELETE Specific Product
 // @route DELETE /products/:id
 // @access PRIVATE
 
-const deleteProduct = async (req, res) => {};
+const deleteProduct = async (req, res) => {
+  const id = req.params.id;
+  Product.findByIdAndDelete(id).exec((err, product) => {
+    if (err || !product) {
+      return res.status(400).json({ message: `Invalid Product ID` });
+    } else {
+      return res
+        .status(200)
+        .json({ message: `Product ${product.productCode} is deleted` });
+    }
+  });
+};
 
 // @desc Consume Specific Product
 // @route PATCH /products/:id/consume
