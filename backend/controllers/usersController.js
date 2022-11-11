@@ -110,7 +110,7 @@ const deleteUser = async (req, res) => {
     if (err || !user) {
       return res.status(400).json({ message: `Invalid ID` });
     } else {
-      return res.status(200).json({ message: `User with ${id} ID, deleted.` });
+      return res.status(200).json({ message: `User ${user.username} deleted` });
     }
   });
 };
