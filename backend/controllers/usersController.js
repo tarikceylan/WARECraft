@@ -52,7 +52,7 @@ const createUser = async (req, res) => {
   // Hash Password
   const hashedPw = await bcrypt.hash(password, parseInt(process.env.SALT));
 
-  const newUser = User.create({
+  const newUser = await User.create({
     username,
     password: hashedPw,
     role,
@@ -64,7 +64,7 @@ const createUser = async (req, res) => {
       .status(201)
       .json({ message: `User created. Username: ${username}` });
   } else {
-    return res.status(400).json({ message: `Invalid user data` });
+    return res.status(400).json({ message: `Invalid User Data` });
   }
 };
 
