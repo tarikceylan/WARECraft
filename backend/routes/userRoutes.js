@@ -7,8 +7,16 @@ const {
   updateUser,
   deleteUser,
 } = require('../controllers/usersController');
+const { authAdmin, authEmployee } = require('../middleware/auth');
 
-router.route('/').get(getAllUsers).post(createUser);
-router.route('/:id').get(getUser).patch(updateUser).delete(deleteUser);
+router.use(authEmployee);
+
+router.route('/').get(getAllUsers);
+router.route('/:id').get(getUser);
+
+router.use(authAdmin);
+
+router.route('/').post(createUser);
+router.route('/:id').patch(updateUser).delete(deleteUser);
 
 module.exports = router;

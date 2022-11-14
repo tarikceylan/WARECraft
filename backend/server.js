@@ -7,6 +7,7 @@ const connectDB = require('./config/dbConn');
 
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 const PORT = process.env.PORT || 3500;
 
@@ -18,6 +19,7 @@ app.use(express.json());
 
 app.use('/users', userRoutes);
 app.use('/products', productRoutes);
+app.use('/auth', authRoutes);
 
 mongoose.connection.once('open', () => {
   console.log(`Connected to MongoDB on ${mongoose.connection.db.databaseName}`);

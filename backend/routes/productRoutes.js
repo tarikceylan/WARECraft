@@ -9,9 +9,17 @@ const {
   consumeProduct,
   fillProduct,
 } = require('../controllers/productController');
+const { authEmployee, authOfficerOrAdmin } = require('../middleware/auth');
 
-router.route('/').get(getAllProducts).post(createProduct);
-router.route('/:id').get(getProduct).patch(updateProduct).delete(deleteProduct);
+router.use(authEmployee);
+
+router.route('/').get(getAllProducts);
+router.route('/:id').get(getProduct);
+
+router.use(authOfficerOrAdmin);
+
+router.route('/').post(createProduct);
+router.route('/:id').patch(updateProduct).delete(deleteProduct);
 router.route('/:id/consume').patch(consumeProduct);
 router.route('/:id/fill').patch(fillProduct);
 module.exports = router;

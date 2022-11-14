@@ -39,10 +39,11 @@ const createProduct = async (req, res) => {
   const { name, category, quantity, productCode } = req.body;
 
   // Check for duplicate product
-  const duplicateProduct = Product.find({ productCode }).lean();
-
+  const duplicateProduct = await Product.find({ productCode }).lean();
   if (duplicateProduct?.length) {
-    return res.status(409).json({ message: `Product is already defined` });
+    return res.status(409).json({
+      message: `Product is already defined. Use /fill to add more of the same product`,
+    });
   }
 
   // Check for the fields
