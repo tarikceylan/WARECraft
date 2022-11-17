@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-// TODO: REFACTOR - NOT DRY
+// TODO: POSSIBLE REFACTOR - NOT DRY
 
 const authAdmin = async (req, res, next) => {
   const token = req.headers.authorization;
